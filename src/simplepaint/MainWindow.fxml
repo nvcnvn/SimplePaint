@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="480.0" prefWidth="720.0" xmlns:fx="http://javafx.com/fxml" fx:controller="simplepaint.MainWindowController">
+    <children>
+        <MenuBar fx:id="menuBar">
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem onAction="#handleNewMenu" text="New"/>
+                        <MenuItem onAction="#handleOpenMenu" text="Open"/>
+                        <SeparatorMenuItem  />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox VBox.vgrow="ALWAYS">
+            <children>
+            <VBox alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS" style="-fx-border-style: dotted;-fx-border-color: #67644e;-fx-border-width: 2;">
+              <children>
+                <HBox alignment="TOP_LEFT" spacing="5.0">
+                  <children>
+                    <Label text="Label" />
+                    <ColorPicker fx:id="ColorPicker" styleClass="split-button" />
+                  </children>
+                </HBox>
+                <Separator prefWidth="200.0" />
+                <HBox alignment="TOP_LEFT" spacing="5.0">
+                  <children>
+                    <Label text="Label" />
+                    <Slider fx:id="GammaPicker" min="0.0" max="4.0" showTickMarks="true" majorTickUnit="0.5" blockIncrement="0.25" value="1.0" />
+                  </children>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5.0">
+                  <children>
+                    <Label text="Label" />
+                    <Slider fx:id="BrightnessPicker" showTickLabels="false" value="50.0" />
+                  </children>
+                </HBox>
+              </children>
+            </VBox>
+            <Pane fx:id="Painter" prefWidth="510.0" style="-fx-background-color:gray;-fx-overflow:scroll;" HBox.hgrow="ALWAYS" />
+          </children>
+        </HBox>
+    </children>
+</VBox>

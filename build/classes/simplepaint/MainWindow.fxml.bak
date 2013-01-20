@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="480.0" prefWidth="720.0" xmlns:fx="http://javafx.com/fxml" fx:controller="simplepaint.MainWindowController">
+  <children>
+    <VBox id="VBox" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
+      <children>
+        <HBox id="HBox" alignment="TOP_LEFT" spacing="5.0">
+          <children>
+            <Label text="Label" />
+            <ColorPicker fx:id="ColorPicker" styleClass="split-button" />
+          </children>
+        </HBox>
+        <Separator prefWidth="200.0" />
+        <HBox id="HBox" alignment="TOP_LEFT" spacing="5.0">
+          <children>
+            <Label text="Label" />
+            <Slider id="Garmar" fx:id="GammaPicker" value="50.0" />
+          </children>
+        </HBox>
+        <HBox id="HBox" alignment="TOP_LEFT" spacing="5.0">
+          <children>
+            <Label text="Label" />
+            <Slider fx:id="BrightnessPicker" showTickLabels="false" value="50.0" />
+          </children>
+        </HBox>
+      </children>
+    </VBox>
+    <AnchorPane prefHeight="-1.0" prefWidth="510.0" style="-fx-background-color: #FF0000;" HBox.hgrow="ALWAYS">
+      <children>
+        <Canvas layoutX="0.0" layoutY="0.0" />
+      </children>
+    </AnchorPane>
+  </children>
+</HBox>

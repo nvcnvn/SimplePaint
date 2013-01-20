@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Stage?>
+<?import simplepaint.util.*?>
+
+<fx:root width="250.0" height="100.0" type="javafx.stage.Stage" xmlns:fx="http://javafx.com/fxml">
+    <title>New...</title>
+    <scene>
+        <Scene>
+            <root>
+                <VBox>
+                    <children>
+                        <HBox VBox.vgrow="ALWAYS" alignment="BOTTOM_RIGHT">
+                            <children>
+                                <NumField fx:id="inputWidth" promptText="Width" />
+                                <NumField fx:id="inputHeight" promptText="Height" />
+                            </children>
+                        </HBox>
+                        <HBox VBox.vgrow="ALWAYS" alignment="CENTER_RIGHT">
+                            <children>
+                                <Button onAction="#handleOKClick" fx:id="btOK">OK</Button>
+                                <Button onAction="#handleCancelClick" fx:id="btCancel">Cancel</Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </root>
+        </Scene>
+    </scene>
+</fx:root>
