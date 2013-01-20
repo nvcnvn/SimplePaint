@@ -1,8 +1,8 @@
 /**
- * Sample Skeleton for "MainWindow.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
+ * Sample Skeleton for "MainWindow.fxml" Controller Class You can copy and paste
+ * this code into your favorite IDE
+ *
+ */
 package simplepaint;
 
 import java.io.File;
@@ -16,45 +16,109 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import simplepaint.util.Dialog;
 
-
 public class MainWindowController
-    implements Initializable {
+        implements Initializable {
 
     @FXML //  fx:id="BrightnessPicker"
     private Slider BrightnessPicker;
-
     @FXML //  fx:id="ColorPicker"
-    private ColorPicker ColorPicker;
-
+    public ColorPicker ColorPicker;
     @FXML //  fx:id="GammaPicker"
     private Slider GammaPicker;
-
     @FXML // fx:id="Painter"
     private Pane Painter;
-    
+    @FXML
+    public Slider SizePicker;
+    @FXML
+    public ToggleButton btFill;
+    @FXML
+    public ToggleButton btStroke;
+    @FXML
+    public ToggleButton btRect;
+    @FXML
+    public ToggleButton btOval;
+    @FXML
+    public ToggleButton btPen;
+    @FXML
+    public ToggleButton btEraser;
+    @FXML
+    public ToggleButton btText;
+    @FXML
+    public ToggleButton btLine;
+    @FXML
+    public ToggleButton btCopy;
+    @FXML
+    public ToggleButton btCut;
+    @FXML
+    public ComboBox cbEffect;
+    //
     public SimpleCanvas cv;
-    
+    //image for undo function
+    private Image bkImg;
+    private DisplacementMap displacementMap;
+    private Brush brh;
+    private ToolHandler th;
+
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        // set a default canvas open
-        this.cv = new SimpleCanvas(400.0, 400.0);
-        this.Painter.getChildren().add(cv);
+        brh = new Brush(this);
+        th = new ToolHandler(this);
+        NewCanvas(400.0, 400.0);
+        
         this.GammaPicker.valueProperty().addListener(new GammaHandler(this));
         this.BrightnessPicker.valueProperty().addListener(new BrightnessHandler(this));
+        this.SizePicker.valueProperty().addListener(brh);
+        this.ColorPicker.valueProperty().addListener(brh.cllst);
+        this.btFill.selectedProperty().addListener(brh.selst);
+        this.btOval.selectedProperty().addListener(brh.selst);
+        this.btRect.selectedProperty().addListener(brh.selst);
+        this.btStroke.selectedProperty().addListener(brh.selst);
+        this.btPen.selectedProperty().addListener(brh.selst);
+        this.btEraser.selectedProperty().addListener(brh.selst);
+        this.btText.selectedProperty().addListener(brh.selst);
+        this.cbEffect.getSelectionModel().selectFirst();
+        this.cbEffect.getSelectionModel().selectedIndexProperty().addListener(brh);
+        
+        this.btLine.selectedProperty().addListener(th);
+        this.btCopy.selectedProperty().addListener(th);
+        this.btCut.selectedProperty().addListener(th);
+
+        //for the DisplacementMap effect
+        int width = 220;
+        int height = 100;
+        FloatMap floatMap = new FloatMap();
+        floatMap.setWidth(width);
+        floatMap.setHeight(height);
+
+        for (int i = 0; i < width; i++) {
+            double v = (Math.sin(i / 20.0 * Math.PI) - 0.5) / 40.0;
+            for (int j = 0; j < height; j++) {
+                floatMap.setSamples(i, j, 0.0f, (float) v);
+            }
+        }
+        displacementMap = new DisplacementMap();
+        displacementMap.setMapData(floatMap);
     }
-    
+
     public void NewCanvas(double w, double h) {
-            //remove and replace the old canvas with a new one
-            Painter.getChildren().remove(cv);
-            cv = new SimpleCanvas(w, h);
-            Painter.getChildren().add(cv);
+        //remove and replace the old canvas with a new one
+        Painter.getChildren().remove(cv);
+        cv = new SimpleCanvas(w, h);
+        cv.ground.addEventHandler(MouseEvent.MOUSE_DRAGGED, brh);
+        cv.ground.addEventHandler(MouseEvent.MOUSE_CLICKED, brh);
+        cv.tool.addEventHandler(MouseEvent.MOUSE_DRAGGED, th);
+        cv.tool.addEventHandler(MouseEvent.MOUSE_CLICKED, th);
+        cv.tool.addEventHandler(MouseEvent.MOUSE_MOVED, th);
+        Painter.getChildren().add(cv);
     }
-    
+
     //wil trigger when user click on New menu
     public void handleNewMenu(ActionEvent e) {
         Dialog nd = new Dialog();
@@ -63,20 +127,65 @@ public class MainWindowController
             NewCanvas(nd.getInWidth(), nd.getInHeight());
         }
     }
-    
+
     public void handleOpenMenu(ActionEvent e) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image", "*.png", "*.jpg", "*,jpeg", "*.bmp"));
         File f = fc.showOpenDialog(null);
-        if(f != null) {
+        if (f != null) {
             try {
                 Image i = new Image(new FileInputStream(f));
                 NewCanvas(i.getWidth(), i.getHeight());
-                cv.ctx.drawImage(i, 0.0, 0.0);
+                cv.groundCtx.drawImage(i, 0.0, 0.0);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
+    public void handleSaveMenu(ActionEvent e) {
+    }
+
+    public void handleUnduMenu(ActionEvent e) {
+        if (bkImg != null) {
+            cv.groundCtx.drawImage(bkImg, 0, 0);
+        }
+    }
+
+    public void bkImage() {
+        bkImg = cv.ground.snapshot(null, null);
+    }
+
+    public void handleBoxBlurMenu(ActionEvent e) {
+        BoxBlur boxBlur = new BoxBlur();
+        boxBlur.setWidth(10);
+        boxBlur.setHeight(3);
+        boxBlur.setIterations(3);
+        bkImage();
+        cv.groundCtx.applyEffect(boxBlur);
+    }
+
+    public void handleBloomMenu(ActionEvent e) {
+        Bloom bloom = new Bloom();
+        bloom.setThreshold(0.1);
+        bkImage();
+        cv.groundCtx.applyEffect(bloom);
+    }
+
+    public void handleDisplacementMapMenu(ActionEvent e) {
+        bkImage();
+        cv.groundCtx.applyEffect(displacementMap);
+    }
+
+    public void handleGlowMenu(ActionEvent e) {
+        bkImage();
+        cv.groundCtx.applyEffect(new Glow(0.8));
+    }
+
+    public void handleSepiaToneMenu(ActionEvent e) {
+        SepiaTone sepiaTone = new SepiaTone();
+        sepiaTone.setLevel(0.7);
+        bkImage();
+        cv.groundCtx.applyEffect(sepiaTone);
+    }
 }

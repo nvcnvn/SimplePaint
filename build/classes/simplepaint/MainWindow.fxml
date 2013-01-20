@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -12,40 +13,108 @@
             <menus>
                 <Menu text="File">
                     <items>
-                        <MenuItem onAction="#handleNewMenu" text="New"/>
-                        <MenuItem onAction="#handleOpenMenu" text="Open"/>
-                        <SeparatorMenuItem  />
+                        <MenuItem onAction="#handleNewMenu" text="New" />
+                        <MenuItem onAction="#handleOpenMenu" text="Open" />
+                        <MenuItem onAction="#handleSaveMenu" text="Save" />
+                        <SeparatorMenuItem />
+                    </items>
+                </Menu>
+                <Menu text="Effect">
+                    <items>
+                        <MenuItem onAction="#handleGlowMenu" text="Glow" />
+                        <MenuItem onAction="#handleSepiaToneMenu" text="SepiaTone" />
+                        <MenuItem onAction="#handleBoxBlurMenu" text="Box Blur" />
+                        <MenuItem onAction="#handleBloomMenu" text="Bloom" />
+                        <MenuItem onAction="#handleDisplacementMapMenu" text="DisplacementMap" />
+                        <SeparatorMenuItem />
+                        <MenuItem onAction="#handleUnduMenu" text="Undo" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <HBox VBox.vgrow="ALWAYS">
             <children>
-            <VBox alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS" style="-fx-border-style: dotted;-fx-border-color: #67644e;-fx-border-width: 2;">
-              <children>
-                <HBox alignment="TOP_LEFT" spacing="5.0">
-                  <children>
-                    <Label text="Label" />
-                    <ColorPicker fx:id="ColorPicker" styleClass="split-button" />
-                  </children>
-                </HBox>
-                <Separator prefWidth="200.0" />
-                <HBox alignment="TOP_LEFT" spacing="5.0">
-                  <children>
-                    <Label text="Label" />
-                    <Slider fx:id="GammaPicker" min="0.0" max="4.0" showTickMarks="true" majorTickUnit="0.5" blockIncrement="0.25" value="1.0" />
-                  </children>
-                </HBox>
-                <HBox alignment="TOP_LEFT" spacing="5.0">
-                  <children>
-                    <Label text="Label" />
-                    <Slider fx:id="BrightnessPicker" showTickLabels="false" value="50.0" />
-                  </children>
-                </HBox>
-              </children>
-            </VBox>
-            <Pane fx:id="Painter" prefWidth="510.0" style="-fx-background-color:gray;-fx-overflow:scroll;" HBox.hgrow="ALWAYS" />
-          </children>
+                <VBox alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" spacing="5.0" style="-fx-border-style: dotted;-fx-border-color: #67644e;-fx-border-width: 2;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <VBox id="HBox" alignment="CENTER" spacing="5.0">
+                            <fx:define>
+                                <ToggleGroup fx:id="toolGroup" />
+                            </fx:define>
+                            <children>
+                                <ToggleButton selected="true" fx:id="btPen" text="Pen" toggleGroup="$toolGroup" />
+                                <ToggleButton fx:id="btEraser" text="Eraser" toggleGroup="$toolGroup" />
+                                <ToggleButton fx:id="btText" text="Text" toggleGroup="$toolGroup" />
+                                <ToggleButton fx:id="btLine" text="Line" toggleGroup="$toolGroup"/>
+                                <ToggleButton fx:id="btCopy" text="Copy" toggleGroup="$toolGroup"/>
+                                <ToggleButton fx:id="btCut" text="Cut" toggleGroup="$toolGroup"/>
+                            </children>
+                        </VBox>
+                        <Separator prefWidth="200.0" />
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <fx:define>
+                                <ToggleGroup fx:id="fillGroup" />
+                            </fx:define>
+                            <children>
+                                <ToggleButton selected="true" fx:id="btFill" text="Fill" toggleGroup="$fillGroup"/>
+                                <ToggleButton fx:id="btStroke" text="Stroke" toggleGroup="$fillGroup"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <fx:define>
+                                <ToggleGroup fx:id="shapeGroup" />
+                            </fx:define>
+                            <children>
+                                <ToggleButton selected="true"  fx:id="btRect" text="Rect" toggleGroup="$shapeGroup"/>
+                                <ToggleButton fx:id="btOval" text="Oval" toggleGroup="$shapeGroup"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <children>
+                                <Label text="Effect" />
+                                <ComboBox fx:id="cbEffect">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Glow" />
+                                            <String fx:value="BoxBlur" />
+                                            <String fx:value="Bloom" />
+                                            <String fx:value="Reflection" />
+                                            <String fx:value="DropShadow"/>
+                                            <String fx:value="InnerShadow"/>
+                                            <String fx:value="DisplacementMap"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                            </children>
+                        </HBox>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <children>
+                                <Label text="Size" />
+                                <Slider fx:id="SizePicker" blockIncrement="0.25" max="20.0" min="0.5" value="2.0" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <children>
+                                <Label text="Label" />
+                                <ColorPicker fx:id="ColorPicker" styleClass="split-button" />
+                            </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" />
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <children>
+                                <Label text="Label" />
+                                <Slider fx:id="GammaPicker" blockIncrement="0.25" max="1.0" min="-1.0" value="0.0" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="TOP_LEFT" spacing="5.0">
+                            <children>
+                                <Label text="Label" />
+                                <Slider fx:id="BrightnessPicker" blockIncrement="0.25" max="1.0" min="-1.0" value="0.0" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <Pane fx:id="Painter" prefWidth="510.0" style="-fx-background-color:gray;-fx-overflow:scroll;" HBox.hgrow="ALWAYS" />
+            </children>
         </HBox>
     </children>
 </VBox>
