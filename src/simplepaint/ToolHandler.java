@@ -24,6 +24,7 @@ public class ToolHandler implements EventHandler<MouseEvent>, ChangeListener<Boo
     private boolean islining = false;
     private boolean iscopying = false;
     private boolean iscuting = false;
+    //vi tri chuot ban dau
     private double currX;
     private double currY;
     private ClipboardContent content = new ClipboardContent();
@@ -38,12 +39,15 @@ public class ToolHandler implements EventHandler<MouseEvent>, ChangeListener<Boo
         double y = t.getY();
 
         if (c.btCopy.isSelected()) {
+            //neu la click chuot
             if (t.getClickCount() == 1 && t.getButton().equals(MouseButton.PRIMARY)) {
                 if (iscopying) {
                     c.cv.toolCtx.clearRect(0.0, 0.0, c.cv.tool.getWidth(), c.cv.tool.getHeight());
+                    //copyt phan vung anh
                     SnapshotParameters sp = new SnapshotParameters();
                     sp.setViewport(new Rectangle2D(currX, currY, x - currX, y - currY));
                     content.putImage(c.cv.ground.snapshot(sp, null));
+                    //bo vao bo nho phu
                     Clipboard.getSystemClipboard().setContent(content);
                     iscopying = false;
                 } else {
@@ -52,6 +56,7 @@ public class ToolHandler implements EventHandler<MouseEvent>, ChangeListener<Boo
                     currY = y;
                 }
             } else {
+                //chuot di chuyen
                 if (iscopying) {
                     c.cv.toolCtx.clearRect(0.0, 0.0, c.cv.tool.getWidth(), c.cv.tool.getHeight());
                     c.cv.toolCtx.strokeRect(currX, currY, x - currX, y - currY);
@@ -83,6 +88,7 @@ public class ToolHandler implements EventHandler<MouseEvent>, ChangeListener<Boo
         if (c.btLine.isSelected()) {
             if (t.getClickCount() == 1) {
                 if (islining) {
+                    //ve duogn thang that su
                     c.cv.toolCtx.clearRect(0.0, 0.0, c.cv.tool.getWidth(), c.cv.tool.getHeight());
                     c.cv.groundCtx.beginPath();
                     c.cv.groundCtx.setStroke(c.ColorPicker.getValue());
@@ -99,6 +105,7 @@ public class ToolHandler implements EventHandler<MouseEvent>, ChangeListener<Boo
                 }
             } else {
                 if (islining) {
+                    //the hien duong thang di chuyen theo chuot
                     c.cv.toolCtx.clearRect(0.0, 0.0, c.cv.tool.getWidth(), c.cv.tool.getHeight());
                     c.cv.toolCtx.beginPath();
                     c.cv.toolCtx.setStroke(c.ColorPicker.getValue());

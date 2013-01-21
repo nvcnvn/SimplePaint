@@ -11,7 +11,7 @@
   </resources>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="SimplePaint.jar" size="49456" download="eager" />
+    <jar href="SimplePaint.jar" size="50073" download="eager" />
   </resources>
 <security>
   <all-permissions/>

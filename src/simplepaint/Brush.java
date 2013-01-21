@@ -8,7 +8,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.effect.*;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,12 +20,19 @@ import simplepaint.util.Prompt;
 public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
 
     private MainWindowController c;
+    //dung cho hieu ung
     private DisplacementMap displacementMap;
+    //size cua duong ve
     private double size = 2.0;
+    //fill la to luon nen, khong fill la stroke chi ve vien
     private boolean fill = true;
+    //rect la hinh tu giac, oval la hinh tron
     private boolean rect = true;
+    //pen la viet chi
     private boolean pen = true;
+    //gom
     private boolean eraser = false;
+    //viet chu
     private boolean text = false;
     private Color clr = Color.BLACK;
     public ChangeListener<Boolean> selst = new ChangeListener<Boolean>() {
@@ -85,11 +91,14 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
 
     @Override
     public void handle(MouseEvent e) {
+        //lay vi tri chuot
         double x = e.getX();
         double y = e.getY();
+        //xoa bo cac hieu ung, mau, font...
         c.cv.groundCtx.restore();
 
         if (c.btEraser.isSelected()) {
+            //ham xoa
             c.cv.groundCtx.clearRect(x - size / 2, y - size / 2, size, size);
         } else if (c.btPen.isSelected()) {
             if (fill) {
@@ -108,6 +117,7 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
                 }
             }
         } else {
+            //lay text tu nguoi dung
             Prompt p = new Prompt();
             p.ShowDialog();
             if (p.isOK()) {

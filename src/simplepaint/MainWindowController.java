@@ -8,10 +8,12 @@ package simplepaint;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 import simplepaint.util.Dialog;
 
 public class MainWindowController
@@ -63,16 +66,21 @@ public class MainWindowController
     public SimpleCanvas cv;
     //image for undo function
     private Image bkImg;
+    //danh cho hieu ung
     private DisplacementMap displacementMap;
+    //quan ly co ve
     private Brush brh;
+    //quan ly cac tool nhu copy, cut..
     private ToolHandler th;
+    //dia chi file
+    private String fileStr = "";
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         brh = new Brush(this);
         th = new ToolHandler(this);
         NewCanvas(400.0, 400.0);
-        
+        //gan listen ner
         this.ColorPicker.setValue(Color.BLACK);
         this.GammaPicker.valueProperty().addListener(new GammaHandler(this));
         this.BrightnessPicker.valueProperty().addListener(new BrightnessHandler(this));
@@ -87,7 +95,7 @@ public class MainWindowController
         this.btText.selectedProperty().addListener(brh.selst);
         this.cbEffect.getSelectionModel().selectFirst();
         this.cbEffect.getSelectionModel().selectedIndexProperty().addListener(brh);
-        
+
         this.btLine.selectedProperty().addListener(th);
         this.btCopy.selectedProperty().addListener(th);
         this.btCut.selectedProperty().addListener(th);
@@ -123,6 +131,7 @@ public class MainWindowController
 
     //wil trigger when user click on New menu
     public void handleNewMenu(ActionEvent e) {
+        //hien dialog lay thong tin tu nguoi dung w*h
         Dialog nd = new Dialog();
         nd.ShowDialog();
         if (nd.isOK()) {
@@ -131,11 +140,13 @@ public class MainWindowController
     }
 
     public void handleOpenMenu(ActionEvent e) {
+        //hien dialog chon file
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image", "*.png", "*.jpg", "*,jpeg", "*.bmp"));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             try {
+                fileStr = f.getAbsolutePath();
                 Image i = new Image(new FileInputStream(f));
                 NewCanvas(i.getWidth(), i.getHeight());
                 cv.groundCtx.drawImage(i, 0.0, 0.0);
@@ -146,6 +157,37 @@ public class MainWindowController
     }
 
     public void handleSaveMenu(ActionEvent e) {
+        File f;
+        String extension = "png";
+        if (fileStr.length() > 0) {
+            //neu la file dc mo thi chi luu lai
+            f = new File(fileStr);
+        } else {
+            //neu la file tao moi thi hien ban luu
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG Image", "*.png"),
+                    new FileChooser.ExtensionFilter("JPG Image", "*.jpg"),
+                    new FileChooser.ExtensionFilter("JPEG Image", "*,jpeg"),
+                    new FileChooser.ExtensionFilter("Bitmap Image", "*.bmp"));
+            f = fc.showSaveDialog(null);
+        }
+        //neu f == null co nghia la nguoi dung khong luu file
+        if(f == null) {
+            return;
+        }
+        //thu lay ten duoi
+        int i = f.getName().lastIndexOf('.');
+        int p = Math.max(f.getName().lastIndexOf('/'), f.getName().lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = f.getName().substring(i + 1);
+        }
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(cv.ground.snapshot(null, null), null), extension, f);
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void handleUnduMenu(ActionEvent e) {

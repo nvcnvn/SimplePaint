@@ -20,8 +20,9 @@ import javafx.scene.layout.AnchorPane;
  * @author nvcnvn
  */
 public class SimpleCanvas extends AnchorPane {
-
+    //canvas chinh de ve
     public Canvas ground;
+    //canvas de the hien cac cong cu nhu copy, cut
     public Canvas tool;
     public GraphicsContext groundCtx;
     public GraphicsContext toolCtx;
@@ -37,6 +38,7 @@ public class SimpleCanvas extends AnchorPane {
         this.getChildren().add(tool);
         this.getChildren().add(ground);
         ground.toFront();
+        //quan ly menu chuot Paste
         MenuItem it = new MenuItem("Paste");
         it.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -49,6 +51,7 @@ public class SimpleCanvas extends AnchorPane {
         });
         final ContextMenu cm = new ContextMenu();
         cm.getItems().add(it);
+        //show menu chuot phai
         this.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 new EventHandler<MouseEvent>() {
                     @Override
