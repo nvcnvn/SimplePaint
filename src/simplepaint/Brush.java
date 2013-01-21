@@ -11,6 +11,7 @@ import javafx.scene.effect.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import simplepaint.util.Prompt;
 
 /**
  *
@@ -88,7 +89,11 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
         c.cv.groundCtx.restore();
         if (e.getButton().equals(MouseButton.PRIMARY)) {
             if (e.getClickCount() == 2) {
-                System.out.println("Double clicked");
+                Prompt p = new Prompt();
+                p.ShowDialog();
+                if (p.isOK()) {
+                    c.cv.groundCtx.fillText(p.getText(), y, y);
+                }
             }
         }
 
@@ -108,6 +113,18 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
                     c.cv.groundCtx.strokeRect(x - size / 2, y - size / 2, size, size);
                 } else {
                     c.cv.groundCtx.strokeOval(x - size / 2, y - size / 2, size, size);
+                }
+            }
+        } else {
+            Prompt p = new Prompt();
+            p.ShowDialog();
+            if (p.isOK()) {
+                if (fill) {
+                    c.cv.groundCtx.setFill(clr);
+                    c.cv.groundCtx.fillText(p.getText(), y, y);
+                } else {
+                    c.cv.groundCtx.setStroke(clr);
+                    c.cv.groundCtx.fillText(p.getText(), y, y);
                 }
             }
         }
