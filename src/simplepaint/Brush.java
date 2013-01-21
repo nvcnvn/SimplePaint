@@ -11,6 +11,7 @@ import javafx.scene.effect.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import simplepaint.util.Prompt;
 
 /**
@@ -27,7 +28,7 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
     private boolean pen = true;
     private boolean eraser = false;
     private boolean text = false;
-    private Color clr = Color.WHITE;
+    private Color clr = Color.BLACK;
     public ChangeListener<Boolean> selst = new ChangeListener<Boolean>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
@@ -87,15 +88,6 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
         double x = e.getX();
         double y = e.getY();
         c.cv.groundCtx.restore();
-        if (e.getButton().equals(MouseButton.PRIMARY)) {
-            if (e.getClickCount() == 2) {
-                Prompt p = new Prompt();
-                p.ShowDialog();
-                if (p.isOK()) {
-                    c.cv.groundCtx.fillText(p.getText(), y, y);
-                }
-            }
-        }
 
         if (c.btEraser.isSelected()) {
             c.cv.groundCtx.clearRect(x - size / 2, y - size / 2, size, size);
@@ -119,6 +111,7 @@ public class Brush implements EventHandler<MouseEvent>, ChangeListener<Number> {
             Prompt p = new Prompt();
             p.ShowDialog();
             if (p.isOK()) {
+                c.cv.groundCtx.setFont(new Font(size));
                 if (fill) {
                     c.cv.groundCtx.setFill(clr);
                     c.cv.groundCtx.fillText(p.getText(), y, y);

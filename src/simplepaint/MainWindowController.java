@@ -20,6 +20,7 @@ import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import simplepaint.util.Dialog;
 
@@ -72,6 +73,7 @@ public class MainWindowController
         th = new ToolHandler(this);
         NewCanvas(400.0, 400.0);
         
+        this.ColorPicker.setValue(Color.BLACK);
         this.GammaPicker.valueProperty().addListener(new GammaHandler(this));
         this.BrightnessPicker.valueProperty().addListener(new BrightnessHandler(this));
         this.SizePicker.valueProperty().addListener(brh);
